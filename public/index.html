@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pustaka Nusa – Perpustakaan Modern</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E📚%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Merriweather:wght@700;900&display=swap">
+<link rel="stylesheet" href="/common.css">
+<script type="speculationrules">{"prefetch":[{"where":{"selector_matches":"a[data-prefetch]"},"eagerness":"moderate"}]}</script>
+</head>
+<body>
+
+<div class="pbar"></div>
+<header class="top"><div class="wrap">
+ <a class="logo" href="#beranda">📚 Pustaka Nusa</a>
+ <nav>
+  <a href="#beranda" data-r="beranda">Beranda</a><a href="#cari" data-r="cari">Katalog</a><a href="#info" data-r="info">Informasi</a>
+  <a href="/admin" data-prefetch>Admin 🔒</a>
+ </nav>
+ <button class="btn ghost sm" id="theme">🌓 Tema</button>
+</div></header>
+
+<main>
+ <div class="hero" id="beranda">
+  <div class="layer" aria-hidden="true"><span>📖</span><span>🔖</span><span>🌿</span></div>
+  <div class="txt">
+   <h1>Jelajahi dunia lewat halaman demi halaman</h1>
+   <p>Lebih dari seribu judul, ruang baca nyaman, dan peminjaman digital. Temukan buku favoritmu hari ini.</p>
+   <a class="btn" href="#cari" style="text-decoration:none;display:inline-block">Cari Buku</a>
+  </div>
+ </div>
+ <section id="cari"><div class="wrap">
+  <h2 class="sec-title">Katalog & Pencarian</h2>
+  <form class="search" role="search" onsubmit="return false">
+   <input id="q" type="search" placeholder="Cari judul atau penulis…" aria-label="Cari buku">
+   <select id="cat" aria-label="Kategori"></select>
+   <button type="button" class="btn ghost" id="layout">⇔ Ganti tata letak</button>
+  </form>
+  <div class="status" id="status" aria-live="polite"></div>
+  <ul class="books" id="books"></ul>
+ </div></section>
+ <section id="info"><div class="wrap">
+  <h2 class="sec-title">Informasi Perpustakaan</h2>
+  <div class="info-grid">
+   <div class="card"><h3>🕘 Jam Layanan</h3>Senin–Jumat 08.00–20.00<br>Sabtu–Minggu 09.00–16.00</div>
+   <div class="card"><h3>📍 Lokasi</h3>Jl. Pustaka No. 17, Timika, Papua Tengah</div>
+   <div class="card"><h3>🎫 Keanggotaan</h3>Gratis untuk pelajar. Pinjam hingga 5 buku selama 14 hari.</div>
+   <div class="card"><h3>💻 Layanan Digital</h3>Katalog daring, perpanjangan mandiri, dan e-book.</div>
+  </div>
+ </div></section>
+</main>
+
+<footer><div class="wrap">
+ <div><h3 style="color:#fff">📚 Pustaka Nusa</h3><p>Rumah bagi pembaca dan pemimpi.</p></div>
+ <div><b>Kontak</b><a href="mailto:halo@pustakanusa.id">halo@pustakanusa.id</a><a href="tel:+62901000000">+62 901 000 000</a></div>
+ <div><b>Media Sosial</b><a href="#beranda">Instagram</a><a href="#beranda">YouTube</a><a href="#beranda">X / Twitter</a></div>
+</div></footer>
+<script src="/landing.js"></script>
+</body>
+</html>

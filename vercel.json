@@ -1,0 +1,10 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "public",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/admin", "destination": "/api/admin" },
+    { "source": "/admin/app.js", "destination": "/api/admin?asset=app.js" }
+  ],
+  "functions": { "api/admin.ts": { "includeFiles": "private/**" } }
+}

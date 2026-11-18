@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin – Pustaka Nusa</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E📚%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Merriweather:wght@700;900&display=swap">
+<link rel="stylesheet" href="/common.css">
+<meta name="robots" content="noindex">
+</head>
+<body>
+<header class="top"><div class="wrap">
+ <a class="logo" href="/">📚 Pustaka Nusa <small style="font:500 .75rem sans-serif;color:var(--muted)">Admin</small></a>
+ <nav><a href="/">Lihat Situs</a><a href="/api/logout">Keluar</a></nav>
+ <button class="btn ghost sm" id="theme">🌓 Tema</button>
+</div></header>
+<main id="admin"><div class="wrap admin-layout">
+ <aside class="side" role="tablist">
+  <button data-tab="dash" class="on">📊 Dashboard</button>
+  <button data-tab="buku">📚 Daftar Buku</button>
+  <button data-tab="form">➕ Tambah/Edit</button>
+  <button data-tab="user">👥 Pengguna</button>
+ </aside>
+ <div class="panel">
+  <section data-p="dash" style="padding:0">
+   <h2 class="sec-title">Dashboard</h2>
+   <div class="stats" id="stats"></div>
+   <div class="card"><h3>Buku per kategori</h3><div class="chart" id="chart"></div></div>
+  </section>
+  <section data-p="buku" style="padding:0" hidden>
+   <h2 class="sec-title">Daftar Buku</h2>
+   <div class="bar"><input id="aq" placeholder="Filter judul/penulis…"><select id="acat"></select></div>
+   <div class="tw"><table><thead><tr>
+    <th data-s="t">Judul ↕</th><th data-s="a">Penulis ↕</th><th data-s="c">Kategori ↕</th><th data-s="y">Tahun ↕</th><th data-s="s">Stok ↕</th><th>Aksi</th></tr></thead>
+    <tbody id="abody"></tbody></table></div>
+  </section>
+  <section data-p="form" style="padding:0" hidden>
+   <h2 class="sec-title" id="ftitle">Tambah Buku</h2>
+   <div class="f card"><form id="bf" novalidate>
+    <input type="hidden" id="fid">
+    <label class="full">Judul<input id="ft" required minlength="3"><span class="err"></span></label>
+    <label>Penulis<input id="fa" required minlength="3"><span class="err"></span></label>
+    <label>Kategori<select id="fc" required></select><span class="err"></span></label>
+    <label>ISBN (10/13 digit)<input id="fi" required pattern="\d{10}|\d{13}" inputmode="numeric"><span class="err"></span></label>
+    <label>Tahun<input id="fy" type="number" min="1900" max="2026" required><span class="err"></span></label>
+    <label>Stok<input id="fs" type="number" min="0" max="999" required><span class="err"></span></label>
+    <div class="full"><button class="btn">Simpan</button> <button type="button" class="btn ghost" id="fr">Reset</button></div>
+   </form></div>
+  </section>
+  <section data-p="user" style="padding:0" hidden>
+   <h2 class="sec-title">Pengguna</h2>
+   <div class="tw"><table><thead><tr><th>Nama</th><th>Email</th><th>Peran</th><th>Status</th></tr></thead><tbody id="ubody"></tbody></table></div>
+  </section>
+ </div>
+</div></main>
+<script src="/admin/app.js"></script>
+</body>
+</html>
