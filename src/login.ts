@@ -1,22 +1,23 @@
+import { ApiError, login } from './api';
 import { $, initTheme } from './shared';
 
 const form = $<HTMLFormElement>('#f');
+const email = $<HTMLInputElement>('#email');
 const pass = $<HTMLInputElement>('#p');
 const err = $('#e');
+const btn = $<HTMLButtonElement>('#go');
 
 form.addEventListener('submit', async (ev: SubmitEvent) => {
   ev.preventDefault();
   err.textContent = '';
+  btn.disabled = true;
   try {
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: pass.value }),
-    });
-    if (res.ok) location.reload();
-    else err.textContent = res.status === 401 ? 'Kata sandi salah.' : `Gagal masuk (kode ${res.status}).`;
-  } catch {
-    err.textContent = 'Jaringan bermasalah.';
+    await login(email.value, pass.value);
+    location.replace('/admin');
+  } catch (e) {
+    err.textContent = e instanceof ApiError ? e.message : 'Jaringan bermasalah. Coba lagi.';
+    pass.value = '';
+    btn.disabled = false;
   }
 });
 initTheme();

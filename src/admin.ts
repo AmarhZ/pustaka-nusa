@@ -1,12 +1,15 @@
 import {
-  $, $$, CATS, USERS, esc, fetchData, fillCats, initTheme, loadBooks, save, state, toast, vt,
-} from './shared';
+  createBook, deleteBook, listBooks, listUsers, logout, setUserActive, updateBook,
+} from './api';
+import { initSlideAdmin, renderSlideList } from './admin-slides';
+import { $, $$, CATS, esc, fillCats, initTheme, toast, vt } from './shared';
 import type { Book, Category, User } from './shared';
 
 type SortKey = 't' | 'a' | 'c' | 'y' | 's';
 type Field = HTMLInputElement | HTMLSelectElement;
 
-let users: User[] = USERS.map((u) => ({ ...u }));
+let books: Book[] = [];
+let users: User[] = [];
 let sortKey: SortKey = 't';
 let sortDir: 1 | -1 = 1;
 
@@ -22,12 +25,23 @@ const fy = $<HTMLInputElement>('#fy');
 const fs = $<HTMLInputElement>('#fs');
 const ftitle = $('#ftitle');
 
+/** Jalankan aksi API; tampilkan pesan galat sebagai toast. */
+async function guard<T>(p: Promise<T>): Promise<T | undefined> {
+  try {
+    return await p;
+  } catch (e) {
+    toast(e instanceof Error ? e.message : 'Terjadi kesalahan');
+    return undefined;
+  }
+}
+
 /* ---------- Tab / modul (view transitions) ---------- */
 function showTab(name: string): void {
   vt(() => {
     $$<HTMLButtonElement>('.side button').forEach((b) => b.classList.toggle('on', b.dataset.tab === name));
     $$('[data-p]').forEach((p) => { p.hidden = p.dataset.p !== name; });
     if (name === 'dash') renderStats();
+    if (name === 'banner') renderSlideList();
   });
 }
 $$<HTMLButtonElement>('.side button').forEach((b) =>
@@ -37,21 +51,22 @@ $$<HTMLButtonElement>('.side button').forEach((b) =>
     showTab(tab);
   }),
 );
+$('#logout').addEventListener('click', async () => {
+  await logout().catch(() => undefined);
+  location.replace('/login');
+});
 
 /* ---------- Dashboard ---------- */
 function renderStats(): void {
-  const books = state.books;
   const total = books.reduce((sum, b) => sum + b.s, 0);
   const out = books.filter((b) => !b.s).length;
   const cards: [string, number][] = [
     ['Judul', books.length],
     ['Eksemplar tersedia', total],
     ['Judul habis', out],
-    ['Anggota aktif', users.filter((u) => u.on).length],
+    ['Anggota aktif', users.filter((u) => u.r === 'Anggota' && u.on).length],
   ];
-  $('#stats').innerHTML = cards
-    .map(([label, n]) => `<div class="card stat"><b>${n}</b>${label}</div>`)
-    .join('');
+  $('#stats').innerHTML = cards.map(([label, n]) => `<div class="card stat"><b>${n}</b>${label}</div>`).join('');
   const counts = CATS.map((c) => books.filter((b) => b.c === c).length);
   const max = Math.max(1, ...counts);
   $('#chart').innerHTML = CATS.map(
@@ -67,7 +82,7 @@ const cmp = (x: string | number, y: string | number): number =>
 function renderList(): void {
   const q = aq.value.toLowerCase();
   const c = acat.value;
-  const rows = state.books
+  const rows = books
     .filter((b) => (!c || b.c === c) && (b.t + b.a).toLowerCase().includes(q))
     .sort((x, y) => cmp(x[sortKey], y[sortKey]) * sortDir);
   $('#abody').innerHTML =
@@ -89,10 +104,10 @@ $$<HTMLTableCellElement>('th[data-s]').forEach((th) =>
 aq.addEventListener('input', renderList);
 acat.addEventListener('change', () => vt(renderList));
 
-$('#abody').addEventListener('click', (e: MouseEvent) => {
+$('#abody').addEventListener('click', async (e: MouseEvent) => {
   const { e: editId, d: delId } = (e.target as HTMLElement).dataset;
   if (editId) {
-    const b = state.books.find((x) => x.id === Number(editId));
+    const b = books.find((x) => x.id === Number(editId));
     if (!b) return;
     fid.value = String(b.id);
     ft.value = b.t; fa.value = b.a; fc.value = b.c; fi.value = b.i;
@@ -101,10 +116,11 @@ $('#abody').addEventListener('click', (e: MouseEvent) => {
     showTab('form');
   }
   if (delId && confirm('Hapus buku ini?')) {
-    state.books = state.books.filter((x) => x.id !== Number(delId));
-    save();
-    vt(renderList);
-    toast('Buku dihapus');
+    if (await guard(deleteBook(Number(delId)))) {
+      books = books.filter((x) => x.id !== Number(delId));
+      vt(renderList);
+      toast('Buku dihapus');
+    }
   }
 });
 
@@ -113,7 +129,7 @@ function resetForm(): void {
   form.reset();
   fid.value = '';
   ftitle.textContent = 'Tambah Buku';
-  $$('.err').forEach((e) => { e.textContent = ''; });
+  $$('#bf .err').forEach((e) => { e.textContent = ''; });
 }
 $('#fr').addEventListener('click', resetForm);
 
@@ -125,7 +141,7 @@ function messageFor(f: Field): string {
   return 'Nilai di luar batas / terlalu pendek';
 }
 
-form.addEventListener('submit', (e: SubmitEvent) => {
+form.addEventListener('submit', async (e: SubmitEvent) => {
   e.preventDefault();
   let ok = true;
   $$<Field>('#bf input:not([type=hidden]), #bf select').forEach((f) => {
@@ -140,11 +156,10 @@ form.addEventListener('submit', (e: SubmitEvent) => {
     t: ft.value.trim(), a: fa.value.trim(), c: fc.value as Category,
     i: fi.value, y: Number(fy.value), s: Number(fs.value),
   };
-  const existing = state.books.find((b) => b.id === Number(fid.value));
-  if (existing) Object.assign(existing, data);
-  else state.books.push({ id: Date.now(), ...data });
-
-  save();
+  const id = Number(fid.value);
+  const saved = await guard(id ? updateBook(id, data) : createBook(data));
+  if (!saved) return;
+  books = id ? books.map((b) => (b.id === id ? saved : b)) : [...books, saved];
   toast('Buku tersimpan ✓');
   resetForm();
   renderList();
@@ -155,16 +170,18 @@ form.addEventListener('submit', (e: SubmitEvent) => {
 function renderUsers(): void {
   $('#ubody').innerHTML = users
     .map(
-      (u, i) => `<tr><td>${esc(u.n)}</td><td>${esc(u.e)}</td><td>${u.r}</td>
-<td><button class="btn sm ${u.on ? '' : 'ghost'}" data-u="${i}">${u.on ? 'Aktif' : 'Nonaktif'}</button></td></tr>`,
+      (u) => `<tr><td>${esc(u.n)}</td><td>${esc(u.e)}</td><td>${u.r}</td>
+<td><button class="btn sm ${u.on ? '' : 'ghost'}" data-u="${esc(u.id)}">${u.on ? 'Aktif' : 'Nonaktif'}</button></td></tr>`,
     )
-    .join('');
+    .join('') || '<tr><td colspan="4">Belum ada pengguna.</td></tr>';
 }
-$('#ubody').addEventListener('click', (e: MouseEvent) => {
-  const idx = (e.target as HTMLElement).dataset.u;
-  const user = idx === undefined ? undefined : users[Number(idx)];
+$('#ubody').addEventListener('click', async (e: MouseEvent) => {
+  const id = (e.target as HTMLElement).dataset.u;
+  const user = users.find((u) => u.id === id);
   if (!user) return;
-  user.on = !user.on;
+  const saved = await guard(setUserActive(user.id, !user.on));
+  if (!saved) return;
+  users = users.map((u) => (u.id === saved.id ? saved : u));
   renderUsers();
   renderStats();
 });
@@ -174,11 +191,11 @@ async function main(): Promise<void> {
   initTheme();
   fillCats(acat, true);
   fillCats(fc, false);
-  await loadBooks(); // priority: high
+  const [b, u] = await Promise.all([guard(listBooks()), guard(listUsers()), initSlideAdmin()]);
+  books = b ?? [];
+  users = u ?? [];
   renderStats();
   renderList();
-  users = await fetchData(users, 'low'); // data sekunder: priority low
   renderUsers();
-  renderStats();
 }
 void main();

@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Merriweather:wght@700;900&display=swap">
+<link rel="preload" href="/api/catalog" as="fetch" fetchpriority="high" crossorigin>
 <link rel="stylesheet" href="/common.css">
 <script type="speculationrules">{"prefetch":[{"where":{"selector_matches":"a[data-prefetch]"},"eagerness":"moderate"}]}</script>
 </head>
@@ -18,20 +19,36 @@
  <a class="logo" href="#beranda">📚 Pustaka Nusa</a>
  <nav>
   <a href="#beranda" data-r="beranda">Beranda</a><a href="#cari" data-r="cari">Katalog</a><a href="#info" data-r="info">Informasi</a>
-  <a href="/admin" data-prefetch>Admin 🔒</a>
+  <a href="/login" data-prefetch>Admin 🔒</a>
  </nav>
  <button class="btn ghost sm" id="theme">🌓 Tema</button>
 </div></header>
 
 <main>
- <div class="hero" id="beranda">
-  <div class="layer" aria-hidden="true"><span>📖</span><span>🔖</span><span>🌿</span></div>
-  <div class="txt">
-   <h1>Jelajahi dunia lewat halaman demi halaman</h1>
-   <p>Lebih dari seribu judul, ruang baca nyaman, dan peminjaman digital. Temukan buku favoritmu hari ini.</p>
-   <a class="btn" href="#cari" style="text-decoration:none;display:inline-block">Cari Buku</a>
-  </div>
- </div>
+ <section class="hero slider" id="beranda" aria-roledescription="carousel" aria-label="Sorotan perpustakaan">
+  <ul class="track" tabindex="-1">
+   <li class="slide" role="group" aria-roledescription="slide" aria-label="1 dari 4">
+    <img src="/img/slide-1.svg" alt="" width="1600" height="900" fetchpriority="high">
+    <div class="txt"><p class="eyebrow">Perpustakaan Modern</p><h1>Jelajahi dunia lewat halaman demi halaman</h1><p>Lebih dari seribu judul, ruang baca nyaman, dan peminjaman digital.</p><a class="btn" href="#cari" style="text-decoration:none;display:inline-block">Cari Buku</a></div>
+   </li>
+   <li class="slide" role="group" aria-roledescription="slide" aria-label="2 dari 4">
+    <img src="/img/slide-2.svg" alt="" width="1600" height="900" loading="lazy">
+    <div class="txt"><p class="eyebrow">Ruang Baca</p><h2>Tempat tenang untuk fokus dan berimajinasi</h2><p>Buka setiap hari lengkap dengan Wi-Fi, colokan, dan sudut baca yang hangat.</p><a class="btn" href="#info" style="text-decoration:none;display:inline-block">Lihat Jam Layanan</a></div>
+   </li>
+   <li class="slide" role="group" aria-roledescription="slide" aria-label="3 dari 4">
+    <img src="/img/slide-3.svg" alt="" width="1600" height="900" loading="lazy">
+    <div class="txt"><p class="eyebrow">Layanan Digital</p><h2>Pinjam dan perpanjang kapan saja</h2><p>Pesan buku dari rumah, ambil saat Anda siap. Mudah dan tanpa antre.</p><a class="btn" href="#cari" style="text-decoration:none;display:inline-block">Telusuri Katalog</a></div>
+   </li>
+   <li class="slide" role="group" aria-roledescription="slide" aria-label="4 dari 4">
+    <img src="/img/slide-4.svg" alt="" width="1600" height="900" loading="lazy">
+    <div class="txt"><p class="eyebrow">Program Anak</p><h2>Mengenalkan cinta membaca sejak dini</h2><p>Dongeng akhir pekan dan klub baca anak, gratis untuk semua anggota.</p><a class="btn" href="#info" style="text-decoration:none;display:inline-block">Pelajari Program</a></div>
+   </li>
+  </ul>
+  <button class="snav prev" type="button" aria-label="Slide sebelumnya">‹</button>
+  <button class="snav next" type="button" aria-label="Slide berikutnya">›</button>
+  <div class="dots" role="group" aria-label="Pilih slide"></div>
+  <button class="spause" type="button" aria-pressed="false">⏸ Jeda</button>
+ </section>
  <section id="cari"><div class="wrap">
   <h2 class="sec-title">Katalog & Pencarian</h2>
   <form class="search" role="search" onsubmit="return false">

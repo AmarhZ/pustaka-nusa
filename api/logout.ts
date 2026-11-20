@@ -1,6 +1,13 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { endSession } from './_lib/auth';
+import { fail, json } from './_lib/http';
 
-export default function handler(_req: VercelRequest, res: VercelResponse): void {
-  res.setHeader('Set-Cookie', 'session=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0');
-  res.redirect(302, '/');
+export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
+  try {
+    if (req.method !== 'POST') { json(res, 405, { error: 'Method tidak didukung' }); return; }
+    await endSession(req, res); // hapus sesi di database + cookie
+    json(res, 200, { ok: true });
+  } catch (err) {
+    fail(res, err);
+  }
 }

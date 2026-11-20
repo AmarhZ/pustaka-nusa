@@ -1,5 +1,8 @@
 node_modules
 .vercel
+.env
+.env.local
+api/_lib/generated
 public/landing.js
 public/login.js
 private/app.js

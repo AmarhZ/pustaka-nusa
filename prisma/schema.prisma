@@ -1,0 +1,86 @@
+generator client {
+  provider         = "prisma-client"
+  output           = "../api/_lib/generated/prisma"
+  moduleFormat     = "cjs"
+  importFileExtension = ""
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  STAFF
+  MEMBER
+}
+
+enum Category {
+  Fiksi
+  Sains
+  Sejarah
+  Teknologi
+  Anak
+  Bisnis
+}
+
+/// Pengguna perpustakaan. Hanya ADMIN aktif dengan passwordHash yang dapat login ke /admin.
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  role         Role      @default(MEMBER)
+  passwordHash String?
+  active       Boolean   @default(true)
+  failedLogins Int       @default(0)
+  lockedUntil  DateTime?
+  createdAt    DateTime  @default(now())
+  sessions     Session[]
+}
+
+/// Sesi login admin. Yang disimpan hanya hash SHA-256 dari token di cookie.
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Book {
+  id        Int      @id @default(autoincrement())
+  title     String
+  author    String
+  category  Category
+  year      Int
+  stock     Int      @default(0)
+  isbn      String
+  createdAt DateTime @default(now())
+
+  @@index([category])
+}
+
+model Slide {
+  id          Int      @id @default(autoincrement())
+  position    Int      @default(0)
+  imageUrl    String
+  eyebrow     String   @default("")
+  title       String
+  body        String   @default("")
+  buttonLabel String
+  buttonLink  String
+  createdAt   DateTime @default(now())
+}
+
+/// Foto banner yang diunggah admin (disimpan di database, dilayani lewat /api/image).
+model Image {
+  id        String   @id @default(cuid())
+  mime      String
+  data      Bytes
+  size      Int
+  createdAt DateTime @default(now())
+}

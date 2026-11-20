@@ -12,34 +12,23 @@ export interface Book {
   i: string; // ISBN
 }
 export interface User {
+  id: string;
   n: string;
   e: string;
   r: Role;
   on: boolean;
 }
+export interface Slide {
+  id: number;
+  img: string; // URL gambar (https://... atau /path)
+  eyebrow: string;
+  title: string;
+  text: string;
+  btn: string;
+  link: string;
+}
 
 export const CATS: Category[] = ['Fiksi', 'Sains', 'Sejarah', 'Teknologi', 'Anak', 'Bisnis'];
-
-export const SEED: Book[] = [
-  { id: 1, t: 'Laskar Pelangi', a: 'Andrea Hirata', c: 'Fiksi', y: 2005, s: 5, i: '9789793062792' },
-  { id: 2, t: 'Bumi Manusia', a: 'Pramoedya A. Toer', c: 'Fiksi', y: 1980, s: 3, i: '9789799731234' },
-  { id: 3, t: 'Sapiens', a: 'Yuval Noah Harari', c: 'Sejarah', y: 2011, s: 0, i: '9786020322056' },
-  { id: 4, t: 'Kosmos', a: 'Carl Sagan', c: 'Sains', y: 1980, s: 4, i: '9789791234567' },
-  { id: 5, t: 'Clean Code', a: 'Robert C. Martin', c: 'Teknologi', y: 2008, s: 6, i: '9780132350884' },
-  { id: 6, t: 'Si Kancil dan Buaya', a: 'Tim Dongeng Nusantara', c: 'Anak', y: 2015, s: 9, i: '9786021111111' },
-  { id: 7, t: 'Atomic Habits', a: 'James Clear', c: 'Bisnis', y: 2018, s: 2, i: '9786020633176' },
-  { id: 8, t: 'Sejarah Indonesia Modern', a: 'M.C. Ricklefs', c: 'Sejarah', y: 1981, s: 2, i: '9789792222222' },
-  { id: 9, t: 'Brief Answers', a: 'Stephen Hawking', c: 'Sains', y: 2018, s: 3, i: '9786020000003' },
-  { id: 10, t: 'Eloquent JavaScript', a: 'Marijn Haverbeke', c: 'Teknologi', y: 2018, s: 4, i: '9781593279509' },
-];
-
-export const USERS: User[] = [
-  { n: 'Sari Wulandari', e: 'sari@mail.id', r: 'Admin', on: true },
-  { n: 'Budi Santoso', e: 'budi@mail.id', r: 'Pustakawan', on: true },
-  { n: 'Maria Kogoya', e: 'maria@mail.id', r: 'Anggota', on: true },
-  { n: 'Yosef Wanimbo', e: 'yosef@mail.id', r: 'Anggota', on: true },
-];
-
 export const ICON: Record<Category, string> = {
   Fiksi: '📖', Sains: '🔭', Sejarah: '🏛️', Teknologi: '💻', Anak: '🧸', Bisnis: '📈',
 };
@@ -97,40 +86,18 @@ export function initTheme(): void {
   });
 }
 
-/* ---------- Data & Fetch Priority ---------- */
-const KEY = 'pn-books';
-export const state: { books: Book[] } = { books: [] };
+/** Hanya izinkan #anchor, /path, atau http(s):// (cegah javascript:). */
+export const safeLink = (l: string): string => (/^(#|\/|https?:\/\/)/.test(l) ? l : '#cari');
 
-export function save(): void {
-  try { localStorage.setItem(KEY, JSON.stringify(state.books)); } catch { /* abaikan */ }
+export function slideHtml(s: Slide, i: number, total: number): string {
+  const h = i === 0 ? 'h1' : 'h2';
+  const img = `<img src="${esc(s.img)}" alt="" width="1600" height="900"${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}>`;
+  const eyebrow = s.eyebrow ? `<p class="eyebrow">${esc(s.eyebrow)}</p>` : '';
+  return `<li class="slide" role="group" aria-roledescription="slide" aria-label="${i + 1} dari ${total}">
+    ${img}
+    <div class="txt">${eyebrow}<${h}>${esc(s.title)}</${h}><p>${esc(s.text)}</p><a class="btn" href="${esc(safeLink(s.link))}" style="text-decoration:none;display:inline-block">${esc(s.btn)}</a></div>
+  </li>`;
 }
-function readStored(): Book[] {
-  try {
-    const raw = localStorage.getItem(KEY);
-    return raw ? (JSON.parse(raw) as Book[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-/** Simulasi pengambilan data lewat fetch dengan prioritas eksplisit. */
-export async function fetchData<T>(data: T, priority: Priority): Promise<T> {
-  const url = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/json' }));
-  try {
-    const init: RequestInit & { priority?: Priority } = { priority };
-    const res = await fetch(url, init);
-    return (await res.json()) as T;
-  } catch {
-    return data;
-  } finally {
-    URL.revokeObjectURL(url);
-  }
-}
-
-/** Katalog = data kritis untuk render awal -> priority high. */
-export async function loadBooks(): Promise<Book[]> {
-  const stored = readStored();
-  state.books = await fetchData(stored.length ? stored : SEED, 'high');
-  if (!stored.length) save();
-  return state.books;
+export function renderSlides(track: HTMLElement, slides: Slide[]): void {
+  track.innerHTML = slides.map((s, i) => slideHtml(s, i, slides.length)).join('');
 }

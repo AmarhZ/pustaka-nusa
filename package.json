@@ -3,17 +3,31 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit",
-    "build": "tsc --noEmit && tsx scripts/build.ts"
+    "build": "tsc --noEmit && tsx scripts/build.ts",
+    "build:vercel": "prisma migrate deploy && npm run build",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
+    "create-admin": "tsx scripts/create-admin.ts"
   },
   "engines": {
     "node": "22.x"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
     "@vercel/node": "^31.0.2",
     "esbuild": "^0.28.2",
+    "prisma": "^7.10.1",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "dotenv": "^18.0.10",
+    "pg": "^8.23.1"
   }
 }

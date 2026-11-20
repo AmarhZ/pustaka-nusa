@@ -63,8 +63,10 @@ footer a{color:#cfc6ee;display:block;text-decoration:none;margin:.2rem 0}
  @keyframes fadeout{to{opacity:0;transform:translateY(-40px)}}
  @keyframes reveal{from{opacity:0;transform:translateY(40px) scale(.96)}to{opacity:1;transform:none}}
  @keyframes progress{to{transform:scaleX(1)}}
- .hero .layer{animation:parallax linear both;animation-timeline:scroll(root);animation-range:0 90vh}
- .hero .txt{animation:fadeout linear both;animation-timeline:view();animation-range:exit 0% exit 80%}
+ @keyframes imgpar{to{transform:translateY(8%) scale(1.15)}}
+ .slide img{animation:imgpar linear both;animation-timeline:scroll(root);animation-range:0 90vh}
+ @keyframes txtswipe{0%{opacity:0;transform:translateX(60px)}35%,65%{opacity:1;transform:none}100%{opacity:0;transform:translateX(-60px)}}
+ .slide .txt{animation:txtswipe linear both;animation-timeline:view(inline);animation-range:cover}
  .book,.card{animation:reveal linear both;animation-timeline:view();animation-range:entry 0% cover 25%}
  .pbar{position:fixed;inset:0 0 auto;height:3px;background:var(--brand-ink);transform-origin:0 50%;transform:scaleX(0);z-index:30;animation:progress linear both;animation-timeline:scroll(root)}
 }
@@ -105,3 +107,36 @@ header.top{view-transition-name:site-header}
 .login form{width:min(380px,100%);display:grid;gap:1rem}
 .login label{display:grid;gap:.3rem;font-weight:600}
 .login input{padding:.65rem .9rem;border:1px solid var(--line);border-radius:.7rem;background:var(--surface);width:100%}
+
+/* ===== Hero slider ===== */
+.hero.slider{display:block;min-height:0;background:#2f2758}
+.track{display:flex;margin:0;padding:0;list-style:none;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.track::-webkit-scrollbar{display:none}
+.slide{position:relative;flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;min-height:min(72vh,640px);display:grid;place-items:center;isolation:isolate;overflow:clip}
+.slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.slide::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#2f275877,#2f2758d0)}
+.slide .txt{padding:3rem 4.5rem 4.5rem;max-width:46rem}
+.eyebrow{font:italic 400 .95rem var(--font-book);letter-spacing:.04em;opacity:.9;margin:0 0 .6rem}
+.slide .txt h1,.slide .txt h2{font-size:clamp(1.9rem,5vw,3.2rem);margin-bottom:1rem}
+.snav{position:absolute;top:50%;translate:0 -50%;z-index:3;width:2.8rem;height:2.8rem;border-radius:50%;border:0;background:#F8F4FFd9;color:#241d3b;font-size:1.6rem;line-height:1;cursor:pointer;transition:transform .2s}
+.snav:hover{transform:scale(1.1)}.snav.prev{left:1rem}.snav.next{right:1rem}
+.dots{position:absolute;bottom:1.1rem;left:50%;translate:-50% 0;display:flex;gap:.55rem;z-index:3}
+.dots button{position:relative;width:.65rem;height:.65rem;border-radius:99px;border:0;padding:0;background:#F8F4FF88;cursor:pointer;transition:width .3s,background .3s}
+.dots button::after{content:"";position:absolute;inset:-.55rem}
+.dots button[aria-current="true"]{width:2rem;background:#F8F4FF}
+.spause{position:absolute;right:1rem;bottom:.8rem;z-index:3;border:0;border-radius:99px;padding:.3rem .75rem;background:#F8F4FFd9;color:#241d3b;cursor:pointer;font-size:.8rem}
+@media (max-width:640px){.snav{display:none}.slide .txt{padding:2.5rem 1.2rem 4rem}.spause{display:none}}
+
+/* ===== Admin: kelola banner ===== */
+.sl-wrap{container:slist / inline-size;margin-bottom:1.2rem}
+.slist{list-style:none;margin:0;padding:0;display:grid;gap:.8rem}
+.scard{display:grid;grid-template-columns:140px 1fr auto;gap:1rem;align-items:center;padding:.6rem;background:var(--surface);border:1px solid var(--line);border-radius:1rem}
+.scard img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:.6rem;background:var(--line)}
+.scard small{display:block;color:var(--muted)}
+.scard .acts{display:flex;gap:.3rem;flex-wrap:wrap}
+@container slist (max-width:560px){.scard{grid-template-columns:96px 1fr}.scard .acts{grid-column:1/-1}}
+.spreview{position:relative;aspect-ratio:16/6;border-radius:.8rem;overflow:hidden;background:#2f2758;color:#fff}
+.spreview img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.spreview .cap{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:.8rem 1rem;background:linear-gradient(180deg,#2f275844,#2f2758cc)}
+.spreview .cap b{font:700 1.1rem var(--font-head)}
+.spreview .cap small{font:italic .8rem var(--font-book);opacity:.9}
