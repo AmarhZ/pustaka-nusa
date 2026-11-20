@@ -6,7 +6,7 @@
     "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && tsx scripts/build.ts",
-    "build:vercel": "prisma migrate deploy && npm run build",
+    "build:vercel": "tsx scripts/check-env.ts && prisma migrate deploy && npm run build",
     "db:migrate": "prisma migrate deploy",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
