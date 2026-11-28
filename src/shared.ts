@@ -90,7 +90,7 @@ export function initTheme(): void {
 export const safeLink = (l: string): string => (/^(#|\/|https?:\/\/)/.test(l) ? l : '#cari');
 
 export function slideHtml(s: Slide, i: number, total: number): string {
-  const h = i === 0 ? 'h1' : 'h2';
+  const h = 'h2';
   const img = `<img src="${esc(s.img)}" alt="" width="1600" height="900"${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}>`;
   const eyebrow = s.eyebrow ? `<p class="eyebrow">${esc(s.eyebrow)}</p>` : '';
   return `<li class="slide" role="group" aria-roledescription="slide" aria-label="${i + 1} dari ${total}">

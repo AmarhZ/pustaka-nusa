@@ -13,23 +13,32 @@
 <script type="speculationrules">{"prefetch":[{"where":{"selector_matches":"a[data-prefetch]"},"eagerness":"moderate"}]}</script>
 </head>
 <body>
-
 <div class="pbar"></div>
 <header class="top"><div class="wrap">
- <a class="logo" href="#beranda">📚 Pustaka Nusa</a>
- <nav>
-  <a href="#beranda" data-r="beranda">Beranda</a><a href="#cari" data-r="cari">Katalog</a><a href="#info" data-r="info">Informasi</a>
-  <a href="/login" data-prefetch>Admin 🔒</a>
- </nav>
- <button class="btn ghost sm" id="theme">🌓 Tema</button>
+ <a class="logo" href="#top">📚 Pustaka Nusa</a>
+ <nav><a href="#layanan">Layanan</a><a href="#cari">Katalog</a><a href="#info">Informasi</a></nav>
+ <div class="hactions"><button class="btn ghost sm" id="theme" aria-label="Ganti tema">🌓</button><a class="btn sm" href="/login" data-prefetch>Masuk Admin</a></div>
 </div></header>
-
-<main>
- <section class="hero slider" id="beranda" aria-roledescription="carousel" aria-label="Sorotan perpustakaan">
+<main id="top">
+ <section class="wrap intro-wrap"><div class="intro">
+  <div class="intro-main">
+   <span class="js-open" data-open="true">● Memeriksa jam buka…</span>
+   <h1>Temukan buku berikutnya yang membuatmu betah membaca</h1>
+   <p class="lead">Telusuri ribuan koleksi, pinjam daring, dan reservasi ruang baca, semuanya dalam satu tempat.</p>
+   <form class="searchbar" role="search" id="sform">
+    <span aria-hidden="true">🔎</span>
+    <input id="q" type="search" placeholder="Cari judul atau penulis…" aria-label="Cari buku" autocomplete="off">
+    <select id="cat" aria-label="Kategori"></select>
+    <button class="btn">Cari</button>
+   </form>
+   <div class="chips" id="chips" role="group" aria-label="Kategori populer"></div>
+   <dl class="stats"><div><dt>10.000+</dt><dd>Judul koleksi</dd></div><div><dt>2.500</dt><dd>Anggota aktif</dd></div><div><dt>14 hari</dt><dd>Masa pinjam</dd></div></dl>
+  </div>
+  <section class="hero slider" id="beranda" aria-roledescription="carousel" aria-label="Sorotan perpustakaan">
   <ul class="track" tabindex="-1">
    <li class="slide" role="group" aria-roledescription="slide" aria-label="1 dari 4">
     <img src="/img/slide-1.svg" alt="" width="1600" height="900" fetchpriority="high">
-    <div class="txt"><p class="eyebrow">Perpustakaan Modern</p><h1>Jelajahi dunia lewat halaman demi halaman</h1><p>Lebih dari seribu judul, ruang baca nyaman, dan peminjaman digital.</p><a class="btn" href="#cari" style="text-decoration:none;display:inline-block">Cari Buku</a></div>
+    <div class="txt"><p class="eyebrow">Perpustakaan Modern</p><h2>Jelajahi dunia lewat halaman demi halaman</h2><p>Lebih dari seribu judul, ruang baca nyaman, dan peminjaman digital.</p><a class="btn" href="#cari" style="text-decoration:none;display:inline-block">Cari Buku</a></div>
    </li>
    <li class="slide" role="group" aria-roledescription="slide" aria-label="2 dari 4">
     <img src="/img/slide-2.svg" alt="" width="1600" height="900" loading="lazy">
@@ -49,27 +58,33 @@
   <div class="dots" role="group" aria-label="Pilih slide"></div>
   <button class="spause" type="button" aria-pressed="false">⏸ Jeda</button>
  </section>
- <section id="cari"><div class="wrap">
-  <h2 class="sec-title">Katalog & Pencarian</h2>
-  <form class="search" role="search" onsubmit="return false">
-   <input id="q" type="search" placeholder="Cari judul atau penulis…" aria-label="Cari buku">
-   <select id="cat" aria-label="Kategori"></select>
-   <button type="button" class="btn ghost" id="layout">⇔ Ganti tata letak</button>
-  </form>
-  <div class="status" id="status" aria-live="polite"></div>
-  <ul class="books" id="books"></ul>
  </div></section>
- <section id="info"><div class="wrap">
-  <h2 class="sec-title">Informasi Perpustakaan</h2>
-  <div class="info-grid">
-   <div class="card"><h3>🕘 Jam Layanan</h3>Senin–Jumat 08.00–20.00<br>Sabtu–Minggu 09.00–16.00</div>
-   <div class="card"><h3>📍 Lokasi</h3>Jl. Pustaka No. 17, Timika, Papua Tengah</div>
-   <div class="card"><h3>🎫 Keanggotaan</h3>Gratis untuk pelajar. Pinjam hingga 5 buku selama 14 hari.</div>
-   <div class="card"><h3>💻 Layanan Digital</h3>Katalog daring, perpanjangan mandiri, dan e-book.</div>
-  </div>
- </div></section>
-</main>
 
+ <section id="layanan" class="wrap"><h2 class="sec-title">Layanan untuk Anda</h2>
+  <ul class="services">
+   <li><a href="#cari"><span>🔎</span><b>Telusuri Katalog</b><small>Cari buku dan cek ketersediaan</small></a></li>
+   <li><a href="#info"><span>🔁</span><b>Perpanjang Pinjaman</b><small>Tanpa antre, kapan saja</small></a></li>
+   <li><a href="#info"><span>🪑</span><b>Reservasi Ruang Baca</b><small>Ruang tenang dan diskusi</small></a></li>
+   <li><a href="#info"><span>🎫</span><b>Kartu Anggota</b><small>Gratis untuk pelajar</small></a></li>
+  </ul>
+ </section>
+
+ <section id="cari" class="wrap">
+  <div class="sec-head"><h2 class="sec-title">Koleksi Buku</h2>
+   <div class="sec-tools"><span class="status" id="status" aria-live="polite"></span><button type="button" class="btn ghost sm" id="layout">⇔ Tata letak</button></div></div>
+  <ul class="books" id="books"></ul>
+ </section>
+
+ <section id="info" class="wrap"><h2 class="sec-title">Kunjungi Kami</h2>
+  <div class="bento">
+   <div class="card hours"><h3>🕘 Jam Layanan</h3><span class="js-open" data-open="true">●</span>
+    <dl class="hrs"><dt>Senin – Jumat</dt><dd>08.00 – 20.00</dd><dt>Sabtu – Minggu</dt><dd>09.00 – 16.00</dd></dl></div>
+   <div class="card"><h3>📍 Lokasi</h3>Jl. Pustaka No. 17, Timika, Papua Tengah</div>
+   <div class="card"><h3>💻 Layanan Digital</h3>Katalog daring, perpanjangan mandiri, dan e-book.</div>
+   <div class="card dark"><h3>🎫 Jadi Anggota</h3>Pinjam hingga 5 buku selama 14 hari. Gratis untuk pelajar.<br><a class="btn" href="#cari" style="margin-top:.8rem;display:inline-block;text-decoration:none">Daftar Sekarang</a></div>
+  </div>
+ </section>
+</main>
 <footer><div class="wrap">
  <div><h3 style="color:#fff">📚 Pustaka Nusa</h3><p>Rumah bagi pembaca dan pemimpi.</p></div>
  <div><b>Kontak</b><a href="mailto:halo@pustakanusa.id">halo@pustakanusa.id</a><a href="tel:+62901000000">+62 901 000 000</a></div>

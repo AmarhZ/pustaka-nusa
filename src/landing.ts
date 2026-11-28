@@ -1,6 +1,6 @@
 import { getCatalog, searchBooks } from './api';
 import { initSlider } from './slider';
-import { $, ICON, esc, fillCats, hue, initTheme, renderSlides, vt } from './shared';
+import { $, $$, CATS, ICON, esc, fillCats, hue, initTheme, renderSlides, vt } from './shared';
 import type { Book } from './shared';
 
 const qEl = $<HTMLInputElement>('#q');
@@ -45,7 +45,42 @@ qEl.addEventListener('input', () => {
   window.clearTimeout(timer);
   timer = window.setTimeout(() => void runSearch(), 200);
 });
-catEl.addEventListener('change', () => void runSearch());
+catEl.addEventListener('change', () => { syncChips(); void runSearch(); });
+
+/* Chip kategori populer */
+const chips = $('#chips');
+chips.innerHTML = CATS.map((c) => `<button type="button" class="chip" data-cat="${c}" aria-pressed="false">${ICON[c]} ${c}</button>`).join('');
+function syncChips(): void {
+  $$('.chip').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cat === catEl.value)));
+}
+chips.addEventListener('click', (e) => {
+  const cat = (e.target as HTMLElement).closest<HTMLElement>('.chip')?.dataset.cat;
+  if (!cat) return;
+  catEl.value = catEl.value === cat ? '' : cat;
+  syncChips();
+  void runSearch();
+  $('#cari').scrollIntoView({ behavior: 'smooth' });
+});
+$('#sform').addEventListener('submit', (e) => {
+  e.preventDefault();
+  void runSearch();
+  $('#cari').scrollIntoView({ behavior: 'smooth' });
+});
+
+/* Status buka/tutup (zona waktu Papua) */
+const HOURS: Record<string, [number, number]> = { Sat: [9, 16], Sun: [9, 16] };
+function paintOpen(): void {
+  const p: Record<string, string> = {};
+  for (const x of new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jayapura', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date())) p[x.type] = x.value;
+  const now = Number(p.hour) + Number(p.minute) / 60;
+  const [open, close] = HOURS[p.weekday ?? ''] ?? [8, 20];
+  const isOpen = now >= open && now < close;
+  $$('.js-open').forEach((el) => {
+    el.dataset.open = String(isOpen);
+    el.textContent = isOpen ? `● Buka sekarang · tutup pukul ${close}.00` : '● Tutup sekarang';
+  });
+}
+paintOpen();
 $('#layout').addEventListener('click', () => vt(() => booksEl.classList.toggle('wide')));
 
 async function main(): Promise<void> {

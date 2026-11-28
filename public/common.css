@@ -140,3 +140,59 @@ header.top{view-transition-name:site-header}
 .spreview .cap{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:.8rem 1rem;background:linear-gradient(180deg,#2f275844,#2f2758cc)}
 .spreview .cap b{font:700 1.1rem var(--font-head)}
 .spreview .cap small{font:italic .8rem var(--font-book);opacity:.9}
+
+/* ===== v2: desain perpustakaan modern (search-first + bento) ===== */
+body{background-image:radial-gradient(900px 480px at 88% -8%,color-mix(in srgb,var(--brand) 30%,transparent),transparent 62%)}
+.wrap{width:min(1180px,100% - 2rem)}
+nav{background:var(--surface);border:1px solid var(--line);padding:.25rem;border-radius:99px}
+nav a{padding:.4rem .95rem}
+.hactions{display:flex;gap:.5rem;align-items:center}
+.intro-wrap{container:intro/inline-size;padding-block:1.5rem 0}
+.intro{display:grid;grid-template-columns:1.1fr 1fr;gap:1.2rem}
+@container intro (max-width:880px){.intro{grid-template-columns:1fr}}
+.intro-main{display:flex;flex-direction:column;gap:1.1rem;align-items:flex-start;border:1px solid var(--line);border-radius:28px;padding:clamp(1.4rem,3.5vw,2.6rem);background:linear-gradient(160deg,var(--surface),color-mix(in srgb,var(--brand) 24%,var(--surface)))}
+.intro-main h1{font-size:clamp(1.8rem,4.4cqi,3rem)}
+.lead{color:var(--muted);margin:0;max-width:34rem}
+.js-open{display:inline-flex;gap:.4rem;padding:.25rem .75rem;border-radius:99px;font-size:.8rem;font-weight:600}
+.js-open[data-open="true"]{background:color-mix(in srgb,#22c55e 18%,transparent);color:#15803d}
+.js-open[data-open="false"]{background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger)}
+.searchbar{display:flex;align-items:center;gap:.4rem;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:.35rem .35rem .35rem 1rem;box-shadow:0 10px 28px color-mix(in srgb,var(--brand-ink) 16%,transparent)}
+.searchbar:focus-within{outline:3px solid var(--brand-ink);outline-offset:2px}
+.searchbar input,.searchbar select{border:0;background:transparent;outline:0;padding:.55rem .4rem;min-width:0}
+.searchbar input{flex:1}
+.searchbar select{max-width:9.5rem;color:var(--muted);border-left:1px solid var(--line);padding-left:.8rem}
+.chips{display:flex;flex-wrap:wrap;gap:.45rem}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:.3rem .8rem;cursor:pointer;font-size:.85rem}
+.chip:hover,.chip[aria-pressed="true"]{background:var(--brand);color:var(--on-brand);border-color:var(--brand)}
+.stats{display:flex;gap:1.8rem;margin:.3rem 0 0;flex-wrap:wrap}.stats div{display:grid}
+.stats dt{font:700 1.5rem var(--font-book);color:var(--brand-ink)}.stats dd{margin:0;color:var(--muted);font-size:.85rem}
+.intro .hero.slider{border-radius:28px;min-height:440px;display:flex;flex-direction:column}
+.intro .track{flex:1}
+.intro .slide{min-height:440px;place-items:end start;text-align:left}
+.intro .slide .txt{padding:1.5rem 1.6rem 3.4rem;max-width:30rem}
+.intro .slide h2{font-size:clamp(1.4rem,2.6vw,2rem)}
+.sec-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.sec-head .sec-title{margin:0}.sec-tools{display:flex;gap:.8rem;align-items:center}.sec-tools .status{margin:0}
+.services{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.services a{display:grid;gap:.15rem;height:100%;padding:1.2rem;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:22px;transition:transform .2s,box-shadow .2s}
+.services a:hover{transform:translateY(-4px);box-shadow:0 14px 30px color-mix(in srgb,var(--brand-ink) 18%,transparent)}
+.services span{display:grid;place-items:center;width:2.8rem;height:2.8rem;border-radius:14px;font-size:1.4rem;background:color-mix(in srgb,var(--brand) 30%,var(--surface));margin-bottom:.5rem}
+.services small{color:var(--muted)}
+.books{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:0 1.2rem}
+.book{background:none;border:0;padding:0;box-shadow:none}
+.book:hover{transform:none;box-shadow:none}
+.cover{position:relative;aspect-ratio:2/3;border-radius:6px 16px 16px 6px;font-size:3rem;box-shadow:0 12px 24px color-mix(in srgb,var(--brand-ink) 28%,transparent);transition:transform .25s}
+.cover::before{content:"";position:absolute;inset:0 auto 0 0;width:10px;border-radius:6px 0 0 6px;background:linear-gradient(90deg,#0004,#fff2)}
+.book:hover .cover{transform:translateY(-6px) rotate(-1deg)}
+.book h3{font-size:.98rem;margin-top:.4rem}
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.bento .card{border-radius:24px;display:grid;align-content:start;gap:.3rem}
+.hours{grid-column:span 2;grid-row:span 2}
+.hrs{display:grid;grid-template-columns:auto 1fr;gap:.4rem 1rem;margin:.6rem 0 0}.hrs dt{color:var(--muted)}.hrs dd{margin:0;font-weight:600}
+.card.dark{background:#2a2340;color:#F8F4FF;border-color:#2a2340}.card.dark .btn{color:var(--on-brand)}
+#info{container:info/inline-size}
+@container info (max-width:760px){.bento{grid-template-columns:1fr 1fr}.hours{grid-column:1/-1;grid-row:auto}}
+@container info (max-width:480px){.bento{grid-template-columns:1fr}}
+footer{border-radius:32px 32px 0 0}
+@supports (animation-timeline:view()){.services li{animation:reveal linear both;animation-timeline:view();animation-range:entry 0% cover 25%}}
+@media (max-width:640px){.searchbar select{display:none}.hactions .btn.sm:not(.ghost){display:none}}
